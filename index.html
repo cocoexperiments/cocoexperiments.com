@@ -11,6 +11,16 @@
         --accent: #e26310;
         --background: #ffffff;
         --light-bg: #f7f7f7;
+        --border-color: #eaeaea;
+      }
+
+      [data-theme='dark'] {
+        --primary: #e0e0e0;
+        --secondary: #b0b0b0;
+        --accent: #ff7d2e;
+        --background: #121212;
+        --light-bg: #1e1e1e;
+        --border-color: #2a2a2a;
       }
 
       * {
@@ -28,10 +38,43 @@
         max-width: 800px;
         margin: 0 auto;
         padding: 2rem 1.5rem;
+        transition: background-color 0.3s ease, color 0.3s ease;
       }
 
       header {
         margin-bottom: 2.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .theme-toggle-container {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .theme-toggle-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--secondary);
+        transition: background-color 0.2s ease, color 0.2s ease;
+      }
+
+      .theme-toggle-btn:hover {
+        background-color: var(--light-bg);
+        color: var(--accent);
+      }
+
+      .theme-toggle-btn.active {
+        color: var(--accent);
+        background-color: var(--light-bg);
       }
 
       h1 {
@@ -61,7 +104,8 @@
       .section {
         margin-bottom: 3rem;
         padding-bottom: 1.5rem;
-        border-bottom: 1px solid #eaeaea;
+        border-bottom: 1px solid var(--border-color);
+        transition: border-color 0.3s ease;
       }
 
       .section:last-of-type {
@@ -149,6 +193,34 @@
         color: var(--accent);
       }
 
+      .tooltip {
+        position: relative;
+      }
+
+      .tooltip-text {
+        visibility: hidden;
+        background-color: var(--light-bg);
+        color: var(--primary);
+        text-align: center;
+        border-radius: 4px;
+        padding: 0.25rem 0.5rem;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        border: 1px solid var(--border-color);
+      }
+
+      .tooltip:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+      }
+
       @media (max-width: 600px) {
         h1 {
           font-size: 1.8rem;
@@ -157,13 +229,98 @@
         .tagline {
           font-size: 1.1rem;
         }
+
+        header {
+          flex-direction: column;
+        }
+
+        .theme-toggle-container {
+          margin-top: 1rem;
+        }
       }
     </style>
   </head>
   <body>
     <header>
-      <h1>Coco Experiments</h1>
-      <p class="tagline">Building products that solve everyday problems.</p>
+      <div>
+        <h1>Coco Experiments</h1>
+        <p class="tagline">Building products that solve everyday problems.</p>
+      </div>
+      <div class="theme-toggle-container">
+        <button
+          id="system-theme"
+          class="theme-toggle-btn tooltip"
+          aria-label="Use system theme"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="7"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <span class="tooltip-text">System</span>
+        </button>
+        <button
+          id="light-theme"
+          class="theme-toggle-btn tooltip"
+          aria-label="Use light theme"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <span class="tooltip-text">Light</span>
+        </button>
+        <button
+          id="dark-theme"
+          class="theme-toggle-btn tooltip"
+          aria-label="Use dark theme"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <span class="tooltip-text">Dark</span>
+        </button>
+      </div>
     </header>
 
     <div class="section">
@@ -421,5 +578,67 @@
       </div>
       <p>© 2025 Coco Experiments LLP. All rights reserved.</p>
     </footer>
+
+    <script>
+      // Theme management
+      const systemThemeBtn = document.getElementById('system-theme');
+      const lightThemeBtn = document.getElementById('light-theme');
+      const darkThemeBtn = document.getElementById('dark-theme');
+      const htmlElement = document.documentElement;
+      const themeButtons = [systemThemeBtn, lightThemeBtn, darkThemeBtn];
+
+      // Function to set theme
+      function setTheme(theme) {
+        // Remove active class from all buttons
+        themeButtons.forEach((btn) => btn.classList.remove('active'));
+
+        if (theme === 'dark') {
+          htmlElement.setAttribute('data-theme', 'dark');
+          localStorage.setItem('theme', 'dark');
+          darkThemeBtn.classList.add('active');
+        } else if (theme === 'light') {
+          htmlElement.setAttribute('data-theme', 'light');
+          localStorage.setItem('theme', 'light');
+          lightThemeBtn.classList.add('active');
+        } else {
+          // System preference
+          localStorage.setItem('theme', 'system');
+          systemThemeBtn.classList.add('active');
+          if (
+            window.matchMedia &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches
+          ) {
+            htmlElement.setAttribute('data-theme', 'dark');
+          } else {
+            htmlElement.setAttribute('data-theme', 'light');
+          }
+        }
+      }
+
+      // Initialize theme based on saved preference or system default
+      function initializeTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'system';
+        setTheme(savedTheme);
+      }
+
+      // Event listeners for theme buttons
+      systemThemeBtn.addEventListener('click', () => setTheme('system'));
+      lightThemeBtn.addEventListener('click', () => setTheme('light'));
+      darkThemeBtn.addEventListener('click', () => setTheme('dark'));
+
+      // Listen for system preference changes
+      if (window.matchMedia) {
+        window
+          .matchMedia('(prefers-color-scheme: dark)')
+          .addEventListener('change', () => {
+            if (localStorage.getItem('theme') === 'system') {
+              setTheme('system');
+            }
+          });
+      }
+
+      // Initialize on page load
+      initializeTheme();
+    </script>
   </body>
 </html>
