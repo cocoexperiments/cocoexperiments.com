@@ -8,10 +8,11 @@
       :root {
         --primary: #2d2d2d;
         --secondary: #4a4a4a;
-        --accent: #e26310;
+        --accent: #d45500;
         --background: #ffffff;
         --light-bg: #f7f7f7;
         --border-color: #eaeaea;
+        --focus-outline: #2563eb;
       }
 
       [data-theme='dark'] {
@@ -21,6 +22,7 @@
         --background: #121212;
         --light-bg: #1e1e1e;
         --border-color: #2a2a2a;
+        --focus-outline: #60a5fa;
       }
 
       * {
@@ -56,7 +58,7 @@
 
       .theme-toggle-btn {
         background: none;
-        border: none;
+        border: 1px solid var(--border-color);
         cursor: pointer;
         padding: 0.5rem;
         border-radius: 50%;
@@ -64,7 +66,8 @@
         align-items: center;
         justify-content: center;
         color: var(--secondary);
-        transition: background-color 0.2s ease, color 0.2s ease;
+        transition: background-color 0.2s ease, color 0.2s ease,
+          border-color 0.2s ease;
       }
 
       .theme-toggle-btn:hover {
@@ -72,9 +75,10 @@
         color: var(--accent);
       }
 
-      .theme-toggle-btn.active {
+      .theme-toggle-btn[aria-pressed='true'] {
         color: var(--accent);
         background-color: var(--light-bg);
+        border-color: var(--accent);
       }
 
       h1 {
@@ -187,6 +191,10 @@
       .social-icon {
         color: var(--secondary);
         transition: color 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.25rem;
       }
 
       .social-icon:hover {
@@ -197,28 +205,16 @@
         position: relative;
       }
 
-      .tooltip-text {
-        visibility: hidden;
-        background-color: var(--light-bg);
-        color: var(--primary);
-        text-align: center;
-        border-radius: 4px;
-        padding: 0.25rem 0.5rem;
+      .sr-only {
         position: absolute;
-        z-index: 1;
-        bottom: 125%;
-        left: 50%;
-        transform: translateX(-50%);
-        opacity: 0;
-        transition: opacity 0.3s;
-        font-size: 0.75rem;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
         white-space: nowrap;
-        border: 1px solid var(--border-color);
-      }
-
-      .tooltip:hover .tooltip-text {
-        visibility: visible;
-        opacity: 1;
+        border-width: 0;
       }
 
       @media (max-width: 600px) {
@@ -238,19 +234,60 @@
           margin-top: 1rem;
         }
       }
+
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: var(--accent);
+        color: white;
+        padding: 8px;
+        z-index: 100;
+        transition: top 0.3s;
+      }
+
+      .skip-link:focus {
+        top: 0;
+        outline: 2px solid var(--focus-outline);
+      }
+
+      ul {
+        list-style-type: none;
+        margin-bottom: 1.2rem;
+      }
+
+      li {
+        position: relative;
+        padding-left: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      li::before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+      }
     </style>
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <header>
       <div>
         <h1>Coco Experiments</h1>
         <p class="tagline">Building products that solve everyday problems.</p>
       </div>
-      <div class="theme-toggle-container">
+      <div
+        class="theme-toggle-container"
+        role="group"
+        aria-label="Theme selection"
+      >
         <button
           id="system-theme"
-          class="theme-toggle-btn tooltip"
+          class="theme-toggle-btn"
           aria-label="Use system theme"
+          aria-pressed="false"
         >
           <svg
             width="20"
@@ -261,6 +298,8 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
           >
             <rect x="4" y="4" width="16" height="12" rx="1"></rect>
             <rect
@@ -275,12 +314,13 @@
             <line x1="12" y1="16" x2="12" y2="20"></line>
             <line x1="8" y1="20" x2="16" y2="20"></line>
           </svg>
-          <span class="tooltip-text">System</span>
+          <span class="sr-only">System</span>
         </button>
         <button
           id="light-theme"
-          class="theme-toggle-btn tooltip"
+          class="theme-toggle-btn"
           aria-label="Use light theme"
+          aria-pressed="false"
         >
           <svg
             width="20"
@@ -291,6 +331,8 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
           >
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -302,12 +344,13 @@
             <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
           </svg>
-          <span class="tooltip-text">Light</span>
+          <span class="sr-only">Light</span>
         </button>
         <button
           id="dark-theme"
-          class="theme-toggle-btn tooltip"
+          class="theme-toggle-btn"
           aria-label="Use dark theme"
+          aria-pressed="false"
         >
           <svg
             width="20"
@@ -318,163 +361,182 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
           >
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
           </svg>
-          <span class="tooltip-text">Dark</span>
+          <span class="sr-only">Dark</span>
         </button>
       </div>
     </header>
 
-    <div class="section">
-      <h2>What we do</h2>
-      <p>
-        At Coco Experiments, we create simple, effective solutions to real-world
-        problems. We believe in the power of thoughtful design and purposeful
-        technology.
-      </p>
-      <p>
-        Our approach is straightforward: identify meaningful problems, design
-        elegant solutions, and build with care and precision.
-      </p>
-    </div>
+    <main id="main-content">
+      <section class="section">
+        <h2>What we do</h2>
+        <p>
+          At Coco Experiments, we create simple, effective solutions to
+          real-world problems. We believe in the power of thoughtful design and
+          purposeful technology.
+        </p>
+        <p>
+          Our approach is straightforward: identify meaningful problems, design
+          elegant solutions, and build with care and precision.
+        </p>
+      </section>
 
-    <div class="section">
-      <h2>Our Philosophy</h2>
-      <p>We're guided by a few core principles:</p>
-      <p>
-        <strong>Simplicity.</strong> The best solutions are often the simplest
-        ones. We strip away complexity and focus on what truly matters.
-      </p>
-      <p>
-        <strong>Purpose.</strong> We only build things that serve a genuine need
-        and improve daily life in tangible ways.
-      </p>
-      <p>
-        <strong>Quality.</strong> We care deeply about craftsmanship and
-        attention to detail in everything we create.
-      </p>
-    </div>
+      <section class="section">
+        <h2>Our Philosophy</h2>
+        <p>We're guided by a few core principles:</p>
+        <ul>
+          <li>
+            <strong>Simplicity.</strong> The best solutions are often the
+            simplest ones. We strip away complexity and focus on what truly
+            matters.
+          </li>
+          <li>
+            <strong>Purpose.</strong> We only build things that serve a genuine
+            need and improve daily life in tangible ways.
+          </li>
+          <li>
+            <strong>Quality.</strong> We care deeply about craftsmanship and
+            attention to detail in everything we create.
+          </li>
+        </ul>
+      </section>
 
-    <div class="section">
-      <h2>Open Source</h2>
-      <p>
-        We believe in the power of open source software to drive innovation and
-        collaboration. We regularly contribute to the community with tools and
-        libraries that solve everyday problems.
-      </p>
-      <a
-        href="https://github.com/cocoexperiments"
-        target="_blank"
-        class="github-link"
-      >
-        <svg
-          class="github-icon"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path
-            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
-          ></path>
-        </svg>
-        Follow us on GitHub
-      </a>
-    </div>
-
-    <div class="section">
-      <h2>Let's Build Together</h2>
-      <p>
-        Beyond our own products, we selectively take on client projects that
-        align with our values. We're particularly interested in collaborating on
-        initiatives that:
-      </p>
-      <p>
-        • Address meaningful problems with thoughtful solutions<br />
-        • Prioritize user experience over unnecessary features<br />
-        • Have the potential to make a positive impact
-      </p>
-      <p>
-        If you have a project in mind that resonates with these principles, we'd
-        love to hear from you.
-      </p>
-      <a href="mailto:info@cocoexperiments.com" class="cta">Get in touch</a>
-    </div>
-
-    <div class="section">
-      <h2>Our Work</h2>
-      <p>
-        We're constantly experimenting and building. While we keep our process
-        simple, our standards are high. We're proud of the products we've
-        developed and the problems we've solved.
-      </p>
-      <p>
-        Interested in what we've been working on?
-        <a href="mailto:info@cocoexperiments.com" class="subtle-link"
-          >Reach out to learn more</a
-        >.
-      </p>
-    </div>
-
-    <div class="section">
-      <h2>Founders</h2>
-      <p>
-        Coco Experiments was founded by
-        <a
-          href="https://x.com/netooraan"
-          target="_blank"
-          class="subtle-link-external"
-          >Sarath Sasindrakumar</a
-        >,
-        <a
-          href="https://srjpn.github.io"
-          target="_blank"
-          class="subtle-link-external"
-          >Sooraj Parameswaran</a
-        >
-        &
-        <a
-          href="https://www.instagram.com/arun_sathian"
-          target="_blank"
-          class="subtle-link-external"
-          >Arun Sathian</a
-        >, bringing together expertise from industry-leading companies like
-        <a
-          href="https://www.thoughtworks.com/"
-          target="_blank"
-          class="subtle-link-external"
-          >ThoughtWorks</a
-        >,
-        <a
-          href="https://www.agoda.com/"
-          target="_blank"
-          class="subtle-link-external"
-          >Agoda</a
-        >,
-        <a
-          href="https://www.thoughtworks.com/"
-          target="_blank"
-          class="subtle-link-external"
-          >Travelopia</a
-        >, and
-        <a
-          href="https://www.deserve.com/"
-          target="_blank"
-          class="subtle-link-external"
-          >Deserve Labs</a
-        >. With an experience of over seven years, they are driven by a passion
-        for building innovative, intuitive, and impactful software solutions.
-      </p>
-    </div>
-
-    <footer>
-      <div class="social-links">
+      <section class="section">
+        <h2>Open Source</h2>
+        <p>
+          We believe in the power of open source software to drive innovation
+          and collaboration. We regularly contribute to the community with tools
+          and libraries that solve everyday problems.
+        </p>
         <a
           href="https://github.com/cocoexperiments"
           target="_blank"
+          rel="noopener noreferrer"
+          class="github-link"
+        >
+          <svg
+            class="github-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
+            ></path>
+          </svg>
+          Follow us on GitHub
+        </a>
+      </section>
+
+      <section class="section">
+        <h2>Let's Build Together</h2>
+        <p>
+          Beyond our own products, we selectively take on client projects that
+          align with our values. We're particularly interested in collaborating
+          on initiatives that:
+        </p>
+        <ul>
+          <li>Address meaningful problems with thoughtful solutions</li>
+          <li>Prioritize user experience over unnecessary features</li>
+          <li>Have the potential to make a positive impact</li>
+        </ul>
+        <p>
+          If you have a project in mind that resonates with these principles,
+          we'd love to hear from you.
+        </p>
+        <a href="mailto:info@cocoexperiments.com" class="cta">Get in touch</a>
+      </section>
+
+      <section class="section">
+        <h2>Our Work</h2>
+        <p>
+          We're constantly experimenting and building. While we keep our process
+          simple, our standards are high. We're proud of the products we've
+          developed and the problems we've solved.
+        </p>
+        <p>
+          Interested in what we've been working on?
+          <a href="mailto:info@cocoexperiments.com" class="subtle-link"
+            >Reach out to learn more</a
+          >.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>Founders</h2>
+        <p>
+          Coco Experiments was founded by
+          <a
+            href="https://x.com/netooraan"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="subtle-link-external"
+            >Sarath Sasindrakumar</a
+          >,
+          <a
+            href="https://srjpn.github.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="subtle-link-external"
+            >Sooraj Parameswaran</a
+          >
+          &
+          <a
+            href="https://www.instagram.com/arun_sathian"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="subtle-link-external"
+            >Arun Sathian</a
+          >, bringing together expertise from industry-leading companies like
+          <a
+            href="https://www.thoughtworks.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="subtle-link-external"
+            >ThoughtWorks</a
+          >,
+          <a
+            href="https://www.agoda.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="subtle-link-external"
+            >Agoda</a
+          >,
+          <a
+            href="https://www.thoughtworks.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="subtle-link-external"
+            >Travelopia</a
+          >, and
+          <a
+            href="https://www.deserve.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="subtle-link-external"
+            >Deserve Labs</a
+          >. With an experience of over seven years, they are driven by a
+          passion for building innovative, intuitive, and impactful software
+          solutions.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="social-links" aria-label="Social media links">
+        <a
+          href="https://github.com/cocoexperiments"
+          target="_blank"
+          rel="noopener noreferrer"
           class="social-icon"
           aria-label="GitHub"
         >
@@ -487,6 +549,8 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
           >
             <path
               d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"
@@ -496,8 +560,9 @@
         <a
           href="https://x.com/cocoexperiments"
           target="_blank"
+          rel="noopener noreferrer"
           class="social-icon"
-          aria-label="Twitter"
+          aria-label="Twitter/X"
         >
           <svg
             width="20"
@@ -508,6 +573,8 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
           >
             <path
               d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"
@@ -517,6 +584,7 @@
         <a
           href="https://www.linkedin.com/company/cocoexperiments"
           target="_blank"
+          rel="noopener noreferrer"
           class="social-icon"
           aria-label="LinkedIn"
         >
@@ -529,6 +597,8 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
           >
             <path
               d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
@@ -540,6 +610,7 @@
         <a
           href="https://www.instagram.com/cocoexperiments"
           target="_blank"
+          rel="noopener noreferrer"
           class="social-icon"
           aria-label="Instagram"
         >
@@ -552,6 +623,8 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
           >
             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
@@ -560,7 +633,6 @@
         </a>
         <a
           href="mailto:info@cocoexperiments.com"
-          target="_blank"
           class="social-icon"
           aria-label="Email"
         >
@@ -573,6 +645,8 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
           >
             <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
             <polyline points="22,6 12,13 2,6"></polyline>
@@ -592,21 +666,23 @@
 
       // Function to set theme
       function setTheme(theme) {
-        // Remove active class from all buttons
-        themeButtons.forEach((btn) => btn.classList.remove('active'));
+        // Update aria-pressed state for all buttons
+        themeButtons.forEach((btn) => {
+          btn.setAttribute('aria-pressed', 'false');
+        });
 
         if (theme === 'dark') {
           htmlElement.setAttribute('data-theme', 'dark');
           localStorage.setItem('theme', 'dark');
-          darkThemeBtn.classList.add('active');
+          darkThemeBtn.setAttribute('aria-pressed', 'true');
         } else if (theme === 'light') {
           htmlElement.setAttribute('data-theme', 'light');
           localStorage.setItem('theme', 'light');
-          lightThemeBtn.classList.add('active');
+          lightThemeBtn.setAttribute('aria-pressed', 'true');
         } else {
           // System preference
           localStorage.setItem('theme', 'system');
-          systemThemeBtn.classList.add('active');
+          systemThemeBtn.setAttribute('aria-pressed', 'true');
           if (
             window.matchMedia &&
             window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -639,6 +715,16 @@
             }
           });
       }
+
+      // Add keyboard accessibility for buttons
+      themeButtons.forEach((button) => {
+        button.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            button.click();
+          }
+        });
+      });
 
       // Initialize on page load
       initializeTheme();
