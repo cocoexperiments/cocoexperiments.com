@@ -3,12 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Coco Experiments - Building Meaningful Solutions</title>
+    <meta
+      name="description"
+      content="Coco Experiments creates simple, effective solutions to real-world problems through thoughtful design and purposeful technology. We build products that solve everyday challenges."
+    />
+    <title>Coco Experiments | Thoughtful Solutions for Everyday Problems</title>
     <style>
       :root {
         --primary: #2d2d2d;
         --secondary: #4a4a4a;
         --accent: #d45500;
+        --accent-darker: #a03f00;
+        --accent-darkest: #7a2e00;
         --background: #ffffff;
         --light-bg: #f7f7f7;
         --border-color: #eaeaea;
@@ -19,6 +25,8 @@
         --primary: #e0e0e0;
         --secondary: #b0b0b0;
         --accent: #ff7d2e;
+        --accent-darker: #cc5500;
+        --accent-darkest: #993d00;
         --background: #121212;
         --light-bg: #1e1e1e;
         --border-color: #2a2a2a;
@@ -118,7 +126,7 @@
 
       .cta {
         display: inline-block;
-        background-color: var(--accent);
+        background-color: var(--accent-darkest);
         color: white;
         text-decoration: none;
         padding: 0.8rem 1.5rem;
@@ -129,31 +137,55 @@
       }
 
       .cta:hover {
-        background-color: #c45609;
+        background-color: #662800;
       }
 
       .subtle-link {
         color: var(--accent);
-        text-decoration: none;
-        border-bottom: 1px solid transparent;
-        transition: border-color 0.2s ease;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
+        text-decoration-color: rgba(212, 85, 0, 0.4);
+        transition: text-decoration-color 0.2s ease,
+          text-decoration-thickness 0.2s ease;
       }
 
       .subtle-link:hover {
-        border-color: var(--accent);
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 2px;
+      }
+
+      [data-theme='dark'] .subtle-link {
+        text-decoration-color: rgba(255, 125, 46, 0.4);
+      }
+
+      [data-theme='dark'] .subtle-link:hover {
+        text-decoration-color: var(--accent);
       }
 
       .subtle-link-external {
         color: var(--secondary);
         font-weight: 500;
         font-style: italic;
-        text-decoration: none;
-        border-bottom: 1px solid transparent;
-        transition: border-color 0.2s ease;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
+        text-decoration-color: rgba(74, 74, 74, 0.4);
+        transition: text-decoration-color 0.2s ease,
+          text-decoration-thickness 0.2s ease;
       }
 
       .subtle-link-external:hover {
-        border-color: var(--accent);
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 2px;
+      }
+
+      [data-theme='dark'] .subtle-link-external {
+        text-decoration-color: rgba(176, 176, 176, 0.4);
+      }
+
+      [data-theme='dark'] .subtle-link-external:hover {
+        text-decoration-color: var(--accent);
       }
 
       .github-link {
@@ -161,14 +193,17 @@
         align-items: center;
         gap: 0.5rem;
         color: var(--accent);
-        text-decoration: none;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
         padding: 0.5rem 0;
         font-weight: 500;
-        transition: color 0.2s ease;
+        transition: color 0.2s ease, text-decoration-thickness 0.2s ease;
       }
 
       .github-link:hover {
         color: #c45609;
+        text-decoration-thickness: 2px;
       }
 
       .github-icon {
@@ -195,10 +230,18 @@
         align-items: center;
         justify-content: center;
         padding: 0.25rem;
+        border-radius: 50%;
       }
 
-      .social-icon:hover {
+      .social-icon:hover,
+      .social-icon:focus {
         color: var(--accent);
+        outline: none;
+      }
+
+      .social-icon:focus-visible {
+        outline: 2px solid var(--focus-outline);
+        outline-offset: 2px;
       }
 
       .tooltip {
@@ -239,7 +282,7 @@
         position: absolute;
         top: -40px;
         left: 0;
-        background: var(--accent);
+        background: var(--accent-darkest);
         color: white;
         padding: 8px;
         z-index: 100;
