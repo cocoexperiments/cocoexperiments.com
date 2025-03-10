@@ -1,0 +1,11 @@
+# robots.txt for cocoexperiments.com
+
+# Allow all web crawlers to access all content
+User-agent: *
+Allow: /
+
+# Specify the sitemap location (once you have one)
+# Sitemap: https://cocoexperiments.com/sitemap.xml
+
+# Crawl-delay directive for specific bots if needed
+# Crawl-delay: 10 
